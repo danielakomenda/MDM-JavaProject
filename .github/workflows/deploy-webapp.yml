@@ -24,8 +24,9 @@ jobs:
         - name: Log in to Docker Hub
           uses: docker/login-action@v1
           with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.MDMPYTHONPROJECT_REGISTRY_PASSWORD }}
+            registry: https://index.docker.io/v1/
+            username: ${{ secrets.AzureAppService_ContainerUsername_f8b7f8e991c348389ff13662227f4819 }}
+            password: ${{ secrets.AzureAppService_ContainerPassword_4d6df517cf5740aa9b588a7a2dd4f3e6 }}
     
         - name: Build and push Docker image
           uses: docker/build-push-action@v3
