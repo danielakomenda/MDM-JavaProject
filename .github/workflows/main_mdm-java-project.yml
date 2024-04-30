@@ -4,9 +4,9 @@
 name: Build and deploy container app to Azure Web App - mdm-java-project
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
   workflow_dispatch:
 
 jobs:
