@@ -2,11 +2,11 @@ name: Deploy-Pipeline
 
 on:
 
-#  push:
-#    branches:
-#        - 'main'
-#    paths:
-#      - 'src/' # Changes in the src-Folder
+  push:
+    branches:
+        - 'main'
+    paths:
+      - 'src/' # Changes in the src-Folder
 
   workflow_dispatch:
 
@@ -37,34 +37,19 @@ jobs:
             tags: komendan/mdm-java-project:latest
 
 
-    deploy_to_azure:
-        name: Deploy Docker-Image to Azure
-        needs: push_to_registry
+    deploy:
         runs-on: ubuntu-latest
-        permissions: 
-          id-token: write #This is required for requesting the OIDC JWT Token
-          contents: read #Required when GH token is used to authenticate with private repo
-    
+        needs: push_to_registry
+        environment:
+            name: 'production'
+            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
         steps:
-          - name: Checkout to the branch
-            uses: actions/checkout@v2
-    
-          - name: Azure Login
-            uses: azure/login@v1
-            with:
-              client-id: ${{ secrets.MDMPYTHONPROJECT_AZURE_CLIENT_ID }}
-              tenant-id: ${{ secrets.MDMPYTHONPROJECT_AZURE_TENANT_ID }}
-              subscription-id: ${{ secrets.MDMPYTHONPROJECT_AZURE_SUBSCRIPTION_ID }}
-    
-          - name: Deploy container app to AZURE
-            uses: azure/container-apps-deploy-action@v2
-            with:
-              registryUrl: registry-1.docker.io
-              registryUsername: ${{ secrets.MDMPYTHONPROJECT_REGISTRY_USERNAME }}
-              registryPassword: ${{ secrets.MDMPYTHONPROJECT_REGISTRY_PASSWORD }}
-              containerAppName: mdm-java-project
-              resourceGroup: mdm-java-project
-              imageToDeploy: docker.io/komendan/mdm-java-project:latest
-              disableTelemetry: true
-              environmentVariables: >-
-                AZURE_STORAGE_CONNECTION_STRING=secretref:storage        
+        - name: Deploy to Azure Web App
+          id: deploy-to-webapp
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: 'mdm-java-project'
+            slot-name: 'production'
+            publish-profile: ${{ secrets.AzureAppService_PublishProfile_ce8e3903aeae4cd29b70a7bbc5cd4700 }}
+            images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_f8b7f8e991c348389ff13662227f4819 }}/komendan/mdm-java-project:${{ github.sha }}'
