@@ -1,15 +1,18 @@
-FROM python:3.12.1
+# Stage 1: Build the Svelte Frontend
+FROM node:16 as frontend-build
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+COPY frontend/ .
+RUN npm run build
 
-# Copy Files
+
+# Stage 2: Build the Maven Spring Boot Backend (using JDK 17 or 18 if necessary)
+FROM openjdk:21-jdk-slim
 WORKDIR /usr/src/app
-COPY requirements.txt requirements.txt
-COPY src src
-COPY setup.py setup.py
+COPY . .
+RUN ./mvnw -Dmaven.test.skip=true package
 
-# Install
-RUN pip install .
-RUN pip install -r requirements.txt
 
-# Docker Run Command
-EXPOSE 80
-CMD [ "python", "-m", "flask", "--app", "mdm_python.backend_server.app:app", "run", "--host=0.0.0.0", "--port=80"]
+EXPOSE 8080
+CMD ["java","-jar","/usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar"]
