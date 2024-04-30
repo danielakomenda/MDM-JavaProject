@@ -1,12 +1,9 @@
 name: Deploy-Pipeline
 
 on:
-
   push:
     branches:
         - 'main'
-    paths:
-      - 'src/' # Changes in the src-Folder
 
   workflow_dispatch:
 
