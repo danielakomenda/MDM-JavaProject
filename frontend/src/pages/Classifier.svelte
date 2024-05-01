@@ -63,65 +63,80 @@
   }
 </script>
 
-<div class="container-fluid">
-  <h1>Fruit-Classifier</h1>
-  <h5>Classifier created with DeepJavaLibrary (DJL)</h5>
+<div class="component">
+  <div class="container-fluid">
+    <h1>Fruit-Classifier</h1>
+    <h5>Classifier created with DeepJavaLibrary (DJL)</h5>
 
-  <p>Upload a picture of one of the following fruits:</p>
+    <p>Upload a picture of one of the following fruits:</p>
     <ul>
-        <li>Apple</li>
-        <li>Banana</li>
-        <li>Cherry</li>
-        <li>Grapes</li>
-        <li>Kiwi</li>
-        <li>Mango</li>
-        <li>Orange</li>
-        <li>Strawberry</li>
+      <li>Apple</li>
+      <li>Banana</li>
+      <li>Cherry</li>
+      <li>Grapes</li>
+      <li>Kiwi</li>
+      <li>Mango</li>
+      <li>Orange</li>
+      <li>Strawberry</li>
     </ul>
 
+    <form>
+      <div class="form-group">
+        <label for="exampleFormControlFile1">Upload picture with. Only .jpeg and .png are accepted</label>
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          class="form-control-file"
+          id="image"
+          name="image"
+          on:change={checkFiles}
+        />
+      </div>
+    </form>
 
-  <form>
-    <div class="form-group">
-      <label for="exampleFormControlFile1">Upload picture with. Only .jpeg and .png are accepted</label>
-      <input
-        type="file"
-        accept="image/png, image/jpeg"
-        class="form-control-file"
-        id="image"
-        name="image"
-        on:change={checkFiles}
-      />
-    </div>
-  </form>
-
-  {#if isVisible}
-    <div>
-      <p><b>Analyzed Image:</b></p>
-      <img src={previewSrc} width="300" alt="preview" />
-    </div>
-    <button type="button" on:click={() => analyze(files[0])}>Analyze</button>
-  {/if}
-
-  {#if analyzeView}
-    {#if results.length > 0}
-      <p><b>This fruit is most likely one of the following:</b></p>
-
-      {#each likely_results as result}
-        <tr>
-          <td>{result.className}:</td>
-          <td>{result.probability.toFixed(3)}</td>
-        </tr>
-      {/each}
-
-      <br />
-
-      <p><b>This fruit is most likely NOT one of the following:</b></p>
-      {#each unlikely_results as result}
-        <tr>
-          <td>{result.className}:</td>
-          <td>{result.probability.toFixed(3)}</td>
-        </tr>
-      {/each}
+    {#if isVisible}
+      <div>
+        <p><b>Analyzed Image:</b></p>
+        <img src={previewSrc} width="300" alt="preview" />
+      </div>
+      <button type="button" on:click={() => analyze(files[0])}>Analyze</button>
     {/if}
-  {/if}
+
+    
+    {#if analyzeView}
+        {#if results.length > 0}
+
+        <div class="answer">
+        <p class="answer-title">This fruit is most likely one of the following:</p>
+            {#each likely_results as result}
+            <tr>
+                <td>{result.className}:</td>
+                <td>{result.probability.toFixed(3)}</td>
+            </tr>
+            {/each} 
+        </div>
+
+        <div class="answer">
+        <p class="answer-title">This fruit is most likely NOT one of the following:</p>
+            {#each unlikely_results as result}
+            <tr>
+                <td>{result.className}:</td>
+                <td>{result.probability.toFixed(3)}</td>
+            </tr>
+            {/each}
+        </div>
+      {/if}
+    {/if}
+  </div>
 </div>
+
+
+<style>
+    .answer {
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+    .answer-title {
+        font-weight: bolder;
+    }
+</style>

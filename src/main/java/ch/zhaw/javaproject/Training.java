@@ -15,6 +15,8 @@ package ch.zhaw.javaproject;
 import ai.djl.Model;
 import ai.djl.basicdataset.cv.classification.ImageFolder;
 import ai.djl.metric.Metrics;
+import ai.djl.modality.cv.transform.RandomFlipLeftRight;
+import ai.djl.modality.cv.transform.RandomResizedCrop;
 import ai.djl.modality.cv.transform.Resize;
 import ai.djl.modality.cv.transform.ToTensor;
 import ai.djl.ndarray.types.Shape;
@@ -44,14 +46,14 @@ import java.nio.file.Paths;
  */
 public final class Training {
 
-    // represents number of training samples processed before the model is updated
-    private static final int BATCH_SIZE = 10;
+    // Represents number of training samples processed before the model is updated
+    private static final int BATCH_SIZE = 16; // Smaller Batch-Size, because the dataset is quite small
 
-    // the number of passes over the complete dataset
+    // The number of passes over the complete dataset
     private static final int EPOCHS = 8;
 
     public static void main(String[] args) throws IOException, TranslateException {
-        // the location to save the model
+        // The location to save the model
         Path modelDir = Paths.get("models");
         
         // Dataset from https://www.kaggle.com/datasets/shreyapmaher/fruits-dataset-images/data
@@ -63,12 +65,6 @@ public final class Training {
         RandomAccessDataset train = datasets[0];
         RandomAccessDataset test = datasets[1];
 
-        // set loss function, which seeks to minimize errors
-        // loss function evaluates model's predictions against the correct answer
-        // (during training)
-        // higher numbers are bad - means model performed poorly; indicates more errors;
-        // want to
-        // minimize errors (loss)
         Loss loss = Loss.softmaxCrossEntropyLoss();
 
         // setting training parameters (ie hyperparameters)
@@ -105,12 +101,17 @@ public final class Training {
 
     private static ImageFolder initDataset(String datasetRoot)
             throws IOException, TranslateException {
-        ImageFolder dataset = ImageFolder.builder()
-                .setRepositoryPath(Paths.get(datasetRoot))                          // Retrieve the data
-                .optMaxDepth(10)                                           // Number of Subfolders that are taken into consideration
+            ImageFolder dataset = ImageFolder.builder()
+                .setRepositoryPath(Paths.get(datasetRoot))  // Retrieve the data
+                .optMaxDepth(10)  // Number of Subfolders that are taken into consideration
                 .addTransform(new Resize(Models.IMAGE_WIDTH, Models.IMAGE_HEIGHT))  // Resize image for better performance
-                .addTransform(new ToTensor())                                       // Convert images to tensor that can be used for Neural Networks
-                .setSampling(BATCH_SIZE, true)                               // Number of Images processed at a time; Random-Sampling to process the data in random order
+                .addTransform(new RandomFlipLeftRight())  // Data-Augmentation: Random horizontal flip
+                .addTransform(new RandomResizedCrop(  // Data-Augmentation: Random crop and resize
+                    Models.IMAGE_WIDTH,
+                    Models.IMAGE_HEIGHT,
+                    0.8f, 0, 0, 0))
+                .addTransform(new ToTensor())  // Convert images to tensor that can be used for Neural Networks
+                .setSampling(BATCH_SIZE, true)  // Number of Images processed at a time; Random-Sampling to process the data in random order
                 .build();
 
         dataset.prepare();

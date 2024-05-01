@@ -4,38 +4,43 @@
 </script>
 
 <div id="app">
-	<nav class="navbar navbar-expand-lg bg-light">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#/">Home</a>
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-bs-toggle="collapse"
-				data-bs-target="#navbarNav"
-				aria-controls="navbarNav"
-				aria-expanded="false"
-				aria-label="Toggle navigation"
-			>
-				<span class="navbar-toggler-icon" />
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item">
-						<a
-							class="nav-link"
-							aria-current="page"
-							href="#/classifier">Classifier</a
-						>
-					</li>
-			</div>
-		</div>
-	</nav>
-
+	<div class="navbar">
+        <!--Navigation-Bar-->
+        <nav class="navbar navbar-expand-sm bg-body-tertiary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#/classifier">Classifier</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
 	<div class="container">
-		<Router {routes} />
+        <div class="component">
+		    <Router {routes} />
+        </div>
 	</div>
 </div>
 
 <style>
-    
+  .nav-link {
+    font-size: x-large;
+    color: #1b5068;
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  a:hover {
+    color: rgb(6, 158, 192);
+  }
+  .navbar {
+    background-color: rgba(248, 242, 117, 0.8);
+    height: 80px;
+  }
+
 </style>

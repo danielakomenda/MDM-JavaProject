@@ -1,10 +1,11 @@
 <script>
-    import axios from "axios";
 </script>
-  
-<h1>Home</h1>
 
+<div class="component">
 
-<style>
+    <h1>Home</h1>
     
+</div>
+
+<style>    
 </style>
