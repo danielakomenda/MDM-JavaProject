@@ -45,8 +45,8 @@ import java.util.Map;
 
 public final class Training {
 
-    private static final int BATCH_SIZE = 64; // Smaller Batch-Size, because the dataset is quite small
-    private static final int EPOCHS = 1;
+    private static final int BATCH_SIZE = 16; // Smaller Batch-Size, because the dataset is quite small
+    private static final int EPOCHS = 20;
 
     public static void main(String[] args) throws IOException, TranslateException {
         // The location to save the model
