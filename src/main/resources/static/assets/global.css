@@ -8,11 +8,11 @@ body {
     line-height: 28px;
     display: flex;
   }
-  
+
 .container {
     margin-top: 20px;
 }
-  
+
 button {
       background-color:aliceblue;
       padding: 8px;
@@ -21,4 +21,3 @@ button {
       border-width: 2px;
       font-family: Montserrat, sans-serif;
 }
-  

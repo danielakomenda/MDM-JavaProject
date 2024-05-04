@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [svelte()],
   root: '.',
   build: {
-    outDir: '../src/main/resources/static'
+    outDir: '../src/main/resources/static/assets'
   }
 })
