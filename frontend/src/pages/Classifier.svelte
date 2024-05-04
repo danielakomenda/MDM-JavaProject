@@ -82,7 +82,7 @@
 
     <form>
       <div class="form-group">
-        <label for="exampleFormControlFile1">Upload picture with. Only .jpeg and .png are accepted</label>
+        <label for="exampleFormControlFile1">Only .jpeg and .png are accepted</label>
         <input
           type="file"
           accept="image/png, image/jpeg"
