@@ -7,12 +7,12 @@ COPY frontend/ .
 RUN npm run build
 
 
-# Stage 2: Build the Maven Spring Boot Backend (using JDK 17 or 18 if necessary)
+# Stage 2: Build the Maven Spring Boot Backend
 FROM openjdk:21-jdk-slim
 WORKDIR /usr/src/app
 COPY . .
 RUN ./mvnw -Dmaven.test.skip=true package
 
 
-EXPOSE 8080
+EXPOSE 8081
 CMD ["java","-jar","/usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar"]

@@ -56,6 +56,12 @@
         }
       }
       analyzeView = true;
+      setTimeout(() => {
+        const resultSection = document.getElementById("result-section");
+        if (resultSection) {
+          resultSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 0);
     } catch (error) {
       console.error("Error:", error);
       answerText = "Error processing the image.";
@@ -102,41 +108,39 @@
       <button type="button" on:click={() => analyze(files[0])}>Analyze</button>
     {/if}
 
-    
     {#if analyzeView}
-        {#if results.length > 0}
-
+      {#if results.length > 0}
         <div class="answer">
-        <p class="answer-title">This fruit is most likely one of the following:</p>
-            {#each likely_results as result}
+          <p class="answer-title">This fruit is most likely one of the following:</p>
+          {#each likely_results as result}
             <tr>
-                <td>{result.className}:</td>
-                <td>{result.probability.toFixed(3)}</td>
+              <td>{result.className}:</td>
+              <td>{result.probability.toFixed(3)}</td>
             </tr>
-            {/each} 
+          {/each}
         </div>
 
         <div class="answer">
-        <p class="answer-title">This fruit is most likely NOT one of the following:</p>
-            {#each unlikely_results as result}
+          <p class="answer-title">This fruit is most likely NOT one of the following:</p>
+          {#each unlikely_results as result}
             <tr>
-                <td>{result.className}:</td>
-                <td>{result.probability.toFixed(3)}</td>
+              <td>{result.className}:</td>
+              <td>{result.probability.toFixed(3)}</td>
             </tr>
-            {/each}
+          {/each}
         </div>
       {/if}
     {/if}
+    <div id="result-section"></div>
   </div>
 </div>
 
-
 <style>
-    .answer {
-        margin-top: 15px;
-        margin-bottom: 5px;
-    }
-    .answer-title {
-        font-weight: bolder;
-    }
+  .answer {
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+  .answer-title {
+    font-weight: bolder;
+  }
 </style>
