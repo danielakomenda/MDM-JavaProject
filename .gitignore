@@ -33,8 +33,7 @@ build/
 
 ### Dataset & Model ###
 fruits/
-models/Dockerfile
-models/*.zip
+models/
 
 ### Svelte-Stuff
 */.DS_Store

@@ -7,12 +7,15 @@ COPY frontend/ .
 RUN npm run build
 
 
-# Stage 2: Build the Maven Spring Boot Backend
-FROM openjdk:21-jdk-slim
+FROM maven:3.8.4-openjdk-17-slim as build
 WORKDIR /usr/src/app
 COPY . .
-RUN ./mvnw -Dmaven.test.skip=true package
+RUN mvn -Dmaven.test.skip=true package
 
+FROM openjdk:17-jdk-slim
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar .
+COPY models /usr/src/app/models
 
 EXPOSE 8081
 CMD ["java","-jar","/usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar"]

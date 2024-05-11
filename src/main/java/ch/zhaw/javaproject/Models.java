@@ -78,6 +78,7 @@ public final class Models {
         block.add(Pool.maxPool2dBlock(new Shape(2, 2), new Shape(2, 2), new Shape(0, 0)));
         block.add(Dropout.builder().optRate(0.25f).build());
 
+        
         // Third Layer
         block.add(Conv2d.builder()
                 .setKernelShape(new Shape(3, 3))
@@ -94,7 +95,7 @@ public final class Models {
 
         // Dense Layer
         block.add(Linear.builder()
-                .setUnits(512)
+                .setUnits(256) // Previous: 512, but the model-size is too heavy
                 .build());
         block.add(BatchNorm.builder().build());
         block.add(Activation::relu);   
@@ -108,4 +109,5 @@ public final class Models {
 
         return block;
     }
+
 }

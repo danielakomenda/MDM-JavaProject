@@ -28,7 +28,7 @@ public class Inference {
     public Inference() {
         try {
             Model model = Models.getModel();
-            Path modelDir = Paths.get("models");
+            Path modelDir = Paths.get("JavaModel");
             model.load(modelDir, Models.MODEL_NAME);
 
             // define a translator for pre and post processing
@@ -44,6 +44,7 @@ public class Inference {
         }
     }
 
+    
     public Classifications predict(byte[] image) throws ModelException, TranslateException, IOException {
         InputStream is = new ByteArrayInputStream(image);
         BufferedImage bi = ImageIO.read(is);

@@ -1,15 +1,3 @@
-/*
- * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- * with the License. A copy of the License is located at
- *
- * http://aws.amazon.com/apache2.0/
- *
- * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
- * OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
- */
 package ch.zhaw.javaproject;
 
 import ai.djl.Model;
@@ -32,16 +20,8 @@ import ai.djl.training.loss.Loss;
 import ai.djl.translate.TranslateException;
 
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public final class Training {
 
@@ -49,8 +29,8 @@ public final class Training {
     private static final int EPOCHS = 20;
 
     public static void main(String[] args) throws IOException, TranslateException {
-        // The location to save the model
-        Path modelDir = Paths.get("models");
+        // The Location to save the model
+        Path modelDir = Paths.get("JavaModel");
 
         // Dataset from
         // https://www.kaggle.com/datasets/shreyapmaher/fruits-dataset-images/data
@@ -69,7 +49,7 @@ public final class Training {
 
         Model model = Models.getModel(); // empty model instance to hold patterns
         Trainer trainer = model.newTrainer(config);
-        // metrics collect and report key performance indicators, like accuracy
+        // Metrics collect and report key performance indicators, like accuracy
         trainer.setMetrics(new Metrics());
 
         Shape inputShape = new Shape(1, 3, Models.IMAGE_HEIGHT, Models.IMAGE_HEIGHT);
@@ -91,28 +71,21 @@ public final class Training {
         // Save Classification-Labels as synset.txt
         model.save(modelDir, Models.MODEL_NAME);
         Models.saveSynset(modelDir, dataset.getSynset());
-
-        List<String> synset = dataset.getSynset();
-
-        addFileToZip(modelDir, Models.MODEL_NAME, synset);
-
     }
 
     private static ImageFolder initDataset(String datasetRoot)
             throws IOException, TranslateException {
         ImageFolder dataset = ImageFolder.builder()
-                .setRepositoryPath(Paths.get(datasetRoot)) // Retrieve the data
-                .optMaxDepth(10) // Number of Subfolders that are taken into consideration
-                .addTransform(new Resize(Models.IMAGE_WIDTH, Models.IMAGE_HEIGHT)) // Resize image for better
-                                                                                   // performance
-                .addTransform(new RandomFlipLeftRight()) // Data-Augmentation: Random horizontal flip
-                .addTransform(new RandomResizedCrop( // Data-Augmentation: Random crop and resize
+                .setRepositoryPath(Paths.get(datasetRoot))                           // Retrieve the data
+                .optMaxDepth(2)                                             // Number of Subfolders that are taken into consideration
+                .addTransform(new Resize(Models.IMAGE_WIDTH, Models.IMAGE_HEIGHT))   // Resize image for better performance
+                .addTransform(new RandomFlipLeftRight())                             // Data-Augmentation: Random horizontal flip
+                .addTransform(new RandomResizedCrop(                                 // Data-Augmentation: Random crop and resize
                         Models.IMAGE_WIDTH,
                         Models.IMAGE_HEIGHT,
                         0.8f, 0, 0, 0))
-                .addTransform(new ToTensor()) // Convert images to tensor that can be used for Neural Networks
-                .setSampling(BATCH_SIZE, true) // Number of Images processed at a time; Random-Sampling to process the
-                                               // data in random order
+                .addTransform(new ToTensor())                                        // Convert images to tensor that can be used for Neural Networks
+                .setSampling(BATCH_SIZE, true)                                // Number of Images processed at a time; data in random order
                 .build();
 
         dataset.prepare();
@@ -125,30 +98,4 @@ public final class Training {
                 .addTrainingListeners(TrainingListener.Defaults.logging());
     }
 
-
-    private static void addFileToZip(Path modelDir, String model, List<String> synset) throws IOException {
-        String modelFileName = model + "-" + String.format("%04d", EPOCHS) + ".params";
-        Path synsetFile = modelDir.resolve("synset.txt");
-        URI uri = URI.create("jar:file:" + modelDir.resolve("fruitclassifier.zip").toUri().getPath());
-    
-        Map<String, String> env = new HashMap<>();
-        env.put("create", "true");
-    
-        // Printing for debugging
-        System.out.println("Model Directory: " + modelDir);
-        System.out.println("Model File Name: " + modelFileName);
-        System.out.println("Synset File: " + synsetFile);
-        System.out.println("URI: " + uri);
-    
-        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
-            Path modelFile = modelDir.resolve(modelFileName);
-            Path modelInZip = zipfs.getPath(modelFileName);  // Only filename, no absolute path
-            Path synsetInZip = zipfs.getPath("synset.txt");  // Only filename, no absolute path
-    
-            // Copy a file into the zip file
-            Files.copy(modelFile, modelInZip, StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(synsetFile, synsetInZip, StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-    
 }
