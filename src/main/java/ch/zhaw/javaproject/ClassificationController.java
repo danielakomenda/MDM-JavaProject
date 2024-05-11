@@ -31,7 +31,7 @@ public class ClassificationController {
         InputStream is = new ByteArrayInputStream(image.getBytes());
         var uri = "http://localhost:8080/predictions/fruitclassifier";
         if (this.isDockerized()) {
-            uri = "http://model-service:8080/predictions/fruitclassifier";
+            uri = "http://20.250.238.7:8080/prediction/fruitclassifier";
         }
         var webClient = WebClient.create();
         Resource resource = new InputStreamResource(is);
