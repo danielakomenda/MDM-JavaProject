@@ -7,10 +7,10 @@ COPY frontend/ .
 RUN npm run build
 
 
-FROM maven:3.8.4-openjdk-17-slim as build
+FROM openjdk:21-jdk-slim
 WORKDIR /usr/src/app
 COPY . .
-RUN mvn -Dmaven.test.skip=true package
+RUN ./mvnw -Dmaven.test.skip=true package
 
-EXPOSE 8082
+EXPOSE 8081
 CMD ["java","-jar","/usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar"]
