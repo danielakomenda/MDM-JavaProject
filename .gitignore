@@ -33,7 +33,7 @@ build/
 
 ### Dataset & Model ###
 fruits/
-models/
+models
 
 ### Svelte-Stuff
 */.DS_Store

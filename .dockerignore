@@ -32,7 +32,7 @@ build/
 
 ### Dataset ###
 fruits/
-models/
+models
 
 
 ### Svelte-Stuff

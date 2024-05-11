@@ -12,10 +12,5 @@ WORKDIR /usr/src/app
 COPY . .
 RUN mvn -Dmaven.test.skip=true package
 
-FROM openjdk:17-jdk-slim
-WORKDIR /usr/src/app
-COPY --from=build /usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar .
-COPY models /usr/src/app/models
-
-EXPOSE 8081
+EXPOSE 8082
 CMD ["java","-jar","/usr/src/app/target/javaproject-0.0.1-SNAPSHOT.jar"]
